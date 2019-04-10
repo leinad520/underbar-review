@@ -233,12 +233,36 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (iterator === undefined) {
+      for (let i = 0; i < collection.length; i++) {
+        if (collection[i] === false) {
+          return false; 
+        }
+      }
+      return true; 
+    }
+    for (let i = 0; i<collection.length; i++) {
+      if (!iterator(collection[i])) {
+        return false
+      }
+    }
+    return true;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (iterator===undefined) {
+      for (let el of collection) {
+        if (el) return true;
+      }
+      return false;
+    }
+    for (let el of collection) {
+      if (iterator(el)) return true;
+    }
+    return false;
   };
 
 
@@ -260,12 +284,29 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
+  _.extend = function(obj) { //obj={a:1} {a:2, b:2}
+      //if (!obj.length) return obj;
+      
+      for (let i = 1; i < arguments.length; i++) {
+        let object = arguments[i];
+        for (let key in object) {
+          arguments[0][key] = object[key];
+        }
+      }
+    return arguments[0];;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+      for (let i = 1; i < arguments.length; i++) {
+        let object = arguments[i];
+        for (let key in object) {
+          if (arguments[0][key]) continue;
+          arguments[0][key] = object[key];
+        }
+      }
+    return arguments[0];
   };
 
 
